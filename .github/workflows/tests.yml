@@ -1,0 +1,50 @@
+# Runs the JNoseCli tests on GitHub's servers with JDK 25.
+# It starts on every push and pull request, every Monday (to check that the
+# jnose-core jar can still be downloaded), and manually from the Actions tab.
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+
+env:
+  JNOSE_JAR: jnose-core-0.9.4-jar-with-dependencies.jar
+  JNOSE_URL: https://github.com/arieslab/jnose-core/releases/download/v0.9.4/jnose-core-0.9.4-jar-with-dependencies.jar
+  JUNIT_JAR: junit-platform-console-standalone-1.11.4.jar
+  JUNIT_URL: https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.11.4/junit-platform-console-standalone-1.11.4.jar
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v5
+
+      - name: Install JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Download jnose-core and JUnit
+        run: |
+          curl -fsSL -o "$JNOSE_JAR" "$JNOSE_URL"
+          curl -fsSL -o "$JUNIT_JAR" "$JUNIT_URL"
+
+      - name: Compile
+        run: javac -d build -cp "$JNOSE_JAR:$JUNIT_JAR" *.java test/*.java
+
+      - name: Run the tests
+        run: java -jar "$JUNIT_JAR" execute --class-path "build:$JNOSE_JAR" --scan-class-path build --fail-if-no-tests --details=tree
+
+      - name: Run JNoseCli as a user would (on its own tests)
+        run: java -cp "$JNOSE_JAR" JNoseCli.java . reports
+
+      - name: Keep the reports of the previous step
+        uses: actions/upload-artifact@v4
+        with:
+          name: jnosecli-reports
+          path: reports/
