@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -78,8 +79,9 @@ public final class JNoseCli {
 
             Files.createDirectories(options.outDir());
             String name = options.project().getFileName().toString();
-            Path byClass = options.outDir().resolve(name + CsvReports.BY_CLASS_SUFFIX);
-            Path bySmell = options.outDir().resolve(name + CsvReports.BY_SMELL_SUFFIX);
+            LocalDateTime now = LocalDateTime.now();
+            Path byClass = options.outDir().resolve(CsvReports.fileName(name, now, CsvReports.BY_CLASS_SUFFIX));
+            Path bySmell = options.outDir().resolve(CsvReports.fileName(name, now, CsvReports.BY_SMELL_SUFFIX));
 
             CsvReports.writeByClass(classes, options.project(), byClass, err);
             int occurrences = CsvReports.writeBySmell(classes, options.project(), bySmell);

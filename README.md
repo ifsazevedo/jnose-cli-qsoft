@@ -42,8 +42,12 @@ On macOS, if the default `java` is not version 25:
 
 | File | Content |
 |---|---|
-| `<project>_result_byclasstest.csv` | One row per test class: project, test class, test file, production file, LOC, number of methods, and one column per smell (21 smells, alphabetical order) with its number of occurrences. |
-| `<project>_result_bytestsmells.csv` | One row per smell occurrence: project, test class, files, smell, test method, lines. |
+| `<project>_<date>-<time>_result_byclasstest.csv` | One row per test class: project, test class, test file, production file, LOC, number of methods, and one column per smell (21 smells, alphabetical order) with its number of occurrences. |
+| `<project>_<date>-<time>_result_bytestsmells.csv` | One row per smell occurrence: project, test class, files, smell, test method, lines. |
+
+Both file names include the date and time of the analysis (e.g.
+`java-rest-books_20261008-184012_result_byclasstest.csv`), so each run keeps its own
+reports and the files sort chronologically.
 
 In `Lines`, most smells give the line range of the test method; Eager Test gives
 the lines where different production methods are called.

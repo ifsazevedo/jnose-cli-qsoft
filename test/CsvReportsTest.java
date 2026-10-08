@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,6 +29,9 @@ class CsvReportsTest {
     private static final String ONE_OCCURRENCE = "1";
     /** Sleepy Test, Eager Test, Empty Test and Ignored Test (see SampleProject). */
     private static final int SMELLS_IN_SAMPLE = 4;
+
+    /** 8 October 2026, 18:40:12. */
+    private static final LocalDateTime RUN_TIME = LocalDateTime.of(2026, 10, 8, 18, 40, 12);
 
     @TempDir
     Path tempDir;
@@ -61,6 +65,15 @@ class CsvReportsTest {
     @Test
     void csvWritesNullAsEmptyCell() {
         assertEquals("a,", CsvReports.csv(Arrays.asList("a", null)), "null becomes an empty cell");
+    }
+
+    // --- File names ---------------------------------------------------------
+
+    @Test
+    void fileNameHasProjectDateTimeAndSuffix() {
+        assertEquals("sample_20261008-184012_result_byclasstest.csv",
+                CsvReports.fileName(SampleProject.NAME, RUN_TIME, CsvReports.BY_CLASS_SUFFIX),
+                "project, yyyyMMdd-HHmmss and the report suffix");
     }
 
     // --- Paths --------------------------------------------------------------

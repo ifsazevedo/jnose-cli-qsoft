@@ -14,6 +14,8 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,9 @@ final class CsvReports {
     static final String BY_CLASS_SUFFIX = "_result_byclasstest.csv";
     static final String BY_SMELL_SUFFIX = "_result_bytestsmells.csv";
 
+    /** Date and time in report names, e.g. 20261008-184012 (sorts chronologically). */
+    static final DateTimeFormatter TIMESTAMP = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+
     static final List<String> BY_CLASS_HEADER = concat(
             List.of("App", "TestFileName", "PathFile", "ProductionFileName", "LOC", "numberMethods"),
             SmellAnalyzer.SMELL_NAMES);
@@ -33,6 +38,11 @@ final class CsvReports {
             List.of("App", "TestClass", "PathFile", "ProductionFileName", "TestSmell", "Method", "Lines");
 
     private CsvReports() {
+    }
+
+    /** Report file name: project, date and time of the analysis, and report suffix. */
+    static String fileName(String project, LocalDateTime time, String suffix) {
+        return project + "_" + TIMESTAMP.format(time) + suffix;
     }
 
     /** Writes one row per test class, with the number of occurrences of each smell. */
