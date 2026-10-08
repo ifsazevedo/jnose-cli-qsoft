@@ -44,7 +44,7 @@ jobs:
         run: java -cp "$JNOSE_JAR" JNoseCli.java . reports
 
       - name: Keep the reports of the previous step
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jnosecli-reports
           path: reports/
