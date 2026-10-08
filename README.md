@@ -1,5 +1,5 @@
 # JNoseCli
-![Tests](https://github.com/<o-seu-utilizador>/jnose-cli-qsoft/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/ifsazevedo/jnose-cli-qsoft/actions/workflows/tests.yml/badge.svg)
 
 Unofficial command-line front end for the **JNose** test smell detector. It runs the
 JNose detection engine (`jnose-core` 0.9.4, the same engine used by JNose 2.5.0) on a
